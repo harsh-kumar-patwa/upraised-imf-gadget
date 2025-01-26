@@ -46,11 +46,23 @@ const prisma = new PrismaClient();
  *                   type: string
  */
 router.post('/login', login);
-router.post('/refresh-token', refreshToken);
 
 // Temporary route to create a test user
 router.post('/create-test-user', async (req, res) => {
+
     const { agentId, password } = req.body;
+
+    // check if user already exists
+    const existingUser = await prisma.user.findUnique({
+        where: { agentId }
+    });
+
+    if (existingUser) {
+        return res.status(409).json({
+            error: 'User already exists'
+        });
+    }
+
     const passwordHash = bcrypt.hashSync(password, 10);
     const user = await prisma.user.create({
         data: {
