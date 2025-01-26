@@ -26,7 +26,7 @@ WORKDIR /app
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/server.js ./  # Explicitly copy server.js
+COPY --from=builder /app/server.js ./ 
 COPY --from=builder /app/routes ./routes
 COPY --from=builder /app/controllers ./controllers
 COPY --from=builder /app/middlewares ./middlewares
