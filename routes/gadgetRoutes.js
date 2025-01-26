@@ -38,6 +38,10 @@ const { initiateSelfDestruct } = require('../controllers/selfDestructController'
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Gadget'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         description: Server error
  */
 router.get('/gadgets', getAllGadgets);
 
@@ -51,11 +55,17 @@ router.get('/gadgets', getAllGadgets);
  *       - BearerAuth: []
  *     responses:
  *       201:
- *         description: Gadget created (Generated  name using Gemini)
+ *         description: Gadget created with generated name
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Gadget'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       403:
+ *         description: Forbidden (admin access required)
+ *       500:
+ *         description: Server error
  */
 router.use(authenticate, authorizeRoles('admin'));
 router.post('/gadgets', createGadget);
@@ -74,6 +84,7 @@ router.post('/gadgets', createGadget);
  *         required: true
  *         schema:
  *           type: string
+ *           format: uuid
  *         description: Gadget ID
  *     requestBody:
  *       required: true
@@ -88,6 +99,12 @@ router.post('/gadgets', createGadget);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Gadget'
+ *       400:
+ *         description: Invalid input
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
  */
 router.patch('/gadgets/:id', updateGadget);
 
@@ -105,6 +122,7 @@ router.patch('/gadgets/:id', updateGadget);
  *         required: true
  *         schema:
  *           type: string
+ *           format: uuid
  *         description: Gadget ID
  *     responses:
  *       200:
@@ -113,6 +131,10 @@ router.patch('/gadgets/:id', updateGadget);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Gadget'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
  */
 router.delete('/gadgets/:id', decommissionGadget);
 
@@ -130,10 +152,11 @@ router.delete('/gadgets/:id', decommissionGadget);
  *         required: true
  *         schema:
  *           type: string
+ *           format: uuid
  *         description: Gadget ID
  *     responses:
  *       200:
- *         description: Self-druct initiated
+ *         description: Self-destruct initiated
  *         content:
  *           application/json:
  *             schema:
@@ -141,12 +164,20 @@ router.delete('/gadgets/:id', decommissionGadget);
  *               properties:
  *                 message:
  *                   type: string
+ *                   example: Self-destruct sequence initiated
  *                 confirmationCode:
  *                   type: string
+ *                   example: "346781"
  *                 countdown:
- *                   type: number
+ *                   type: integer
+ *                   example: 60
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundError'
  */
 router.post('/gadgets/:id/self-destruct', initiateSelfDestruct);
+
 /**
  * @swagger
  * components:
@@ -161,6 +192,34 @@ router.post('/gadgets/:id/self-destruct', initiateSelfDestruct);
  *     NotFoundError:
  *       description: The requested resource was not found
  *   schemas:
+ *     Gadget:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           format: uuid
+ *         name:
+ *           type: string
+ *         status:
+ *           type: string
+ *           enum: [Available, Deployed, Destroyed, Decommissioned]
+ *         decommissionedAt:
+ *           type: string
+ *           format: date-time
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *     GadgetUpdate:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *         status:
+ *           type: string
+ *           enum: [Available, Deployed, Destroyed, Decommissioned]
  *     Error:
  *       type: object
  *       properties:
@@ -176,39 +235,4 @@ router.post('/gadgets/:id/self-destruct', initiateSelfDestruct);
  *               format: date-time
  */
 
-/**
- * @swagger
- * /gadgets/{id}/self-destruct:
- *   post:
- *     summary: Initiate self-destruct sequence
- *     tags: [Gadgets]
- *     security:
- *       - BearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *         description: The gadget ID
- *     responses:
- *       200:
- *         description: Self-destruct initiated
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 confirmationCode:
- *                   type: string
- *                 countdown:
- *                   type: integer
- *       401:
- *         $ref: '#/components/responses/UnauthorizedError'
- *       404:
- *         $ref: '#/components/responses/NotFoundError'
- */
 module.exports = router;
