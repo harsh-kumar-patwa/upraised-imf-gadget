@@ -35,4 +35,4 @@ USER node
 EXPOSE 3000
 
 # Start command
-CMD ["dumb-init", "sh", "-c", "DATABASE_URL=$DIRECT_URL npx prisma migrate deploy && node dist/server.js"]
+CMD ["dumb-init", "sh", "-c", "DATABASE_URL=$DIRECT_URL npx prisma migrate deploy && node server.js"]
