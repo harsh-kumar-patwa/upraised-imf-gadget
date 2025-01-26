@@ -18,7 +18,7 @@ const options = {
         description: 'Local server' 
       },
       { 
-        url: 'https://harsh-upraised.onrender.com/api', 
+        url: 'https://upraised-imf-gadget.onrender.com/api', 
         description: 'Production server' 
       }
     ],
