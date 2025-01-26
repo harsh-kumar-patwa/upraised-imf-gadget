@@ -54,7 +54,7 @@ imf-gadget-api/
 1.  **Clone the repository:**
 
     ```bash
-    git clone [<repository-url>](https://github.com/harsh-kumar-patwa/upraised-imf-gadget)
+    git clone https://github.com/harsh-kumar-patwa/upraised-imf-gadget
     cd upraised-imf-gadget
     ```
 
