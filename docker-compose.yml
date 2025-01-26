@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL
+      - DIRECT_URL
+      - JWT_SECRET
+      - JWT_REFRESH_SECRET
+      - NODE_ENV=production
+    env_file:
+      - .env
