@@ -26,7 +26,7 @@ WORKDIR /app
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/server.js ./ 
+COPY --from=builder /app/server.js ./
 COPY --from=builder /app/routes ./routes
 COPY --from=builder /app/controllers ./controllers
 COPY --from=builder /app/middlewares ./middlewares
@@ -35,7 +35,7 @@ COPY --from=builder /app/swagger ./swagger
 COPY --from=builder /app/utils ./utils
 
 # Security setup
-RUN apk add --no-cache dumb-init && \
+RUN apk add --no-cache openssl dumb-init && \
     chown -R node:node /app
 USER node
 
