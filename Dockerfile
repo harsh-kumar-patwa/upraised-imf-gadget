@@ -15,6 +15,7 @@ RUN npx prisma generate
 
 # Copy source code
 COPY . .
+COPY server.js /app/server.js
 
 # Stage 2: Runtime
 FROM node:20-alpine
