@@ -30,39 +30,6 @@ const options = {
               bearerFormat: 'JWT'
             }
         },
-        schemas: {
-          Gadget: {
-            type: 'object',
-            properties: {
-              id: { type: 'string', format: 'uuid' },
-              name: { type: 'string' },
-              status: { 
-                type: 'string',
-                enum: ['Available', 'Deployed', 'Destroyed', 'Decommissioned']
-              },
-              decommissionedAt: { type: 'string', format: 'date-time' },
-              createdAt: { type: 'string', format: 'date-time' },
-              updatedAt: { type: 'string', format: 'date-time' }
-            }
-          },
-          GadgetInput: {
-            type: 'object',
-            required: ['name'],
-            properties: {
-              name: { type: 'string' }
-            }
-          },
-          GadgetUpdate: {
-            type: 'object',
-            properties: {
-              name: { type: 'string' },
-              status: { 
-                type: 'string',
-                enum: ['Available', 'Deployed', 'Destroyed', 'Decommissioned']
-              }
-            }
-          }
-        }
       },
     security: [{
       BearerAuth: []
