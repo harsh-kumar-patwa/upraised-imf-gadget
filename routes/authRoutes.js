@@ -50,14 +50,16 @@ router.post('/refresh-token', refreshToken);
 
 // Temporary route to create a test user
 router.post('/create-test-user', async (req, res) => {
-    const hashedPassword = bcrypt.hashSync('secret', 10);
+    const { agentId, password } = req.body;
+    const passwordHash = bcrypt.hashSync(password, 10);
     const user = await prisma.user.create({
-      data: {
-        agentId: 'admin',
-        passwordHash: hashedPassword,
-        role: 'admin'
-      }
+        data: {
+            agentId,
+            passwordHash,
+            role: 'admin'
+        }
     });
+
     res.json(user);
   });
 
